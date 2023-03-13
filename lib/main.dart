@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:push_notification/push.dart';
 
+import 'Home.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -62,7 +64,9 @@ class _HomePageState extends State {
         _notificationInfo = notification;
         _totalNotifications++;
       });
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(),));
     }
+
   }
 
   void registerNotification() async {
@@ -70,6 +74,12 @@ class _HomePageState extends State {
     _messaging = FirebaseMessaging.instance;
     Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       print("Handling a background message: ${message.messageId}");
+      if (message != null && message != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      }
     }
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -83,7 +93,6 @@ class _HomePageState extends State {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        // Parse the message received
         PushNotification notification = PushNotification(
           title: message.notification?.title,
           body: message.notification?.body,
@@ -181,3 +190,4 @@ class NotificationBadge extends StatelessWidget {
     );
   }
 }
+
